@@ -1,4 +1,4 @@
-type SharedDict{K,V} <: Associative{K,V}
+immutable SharedDict{K,V} <: Associative{K,V}
     slots::SharedArray{UInt8,1}
     keys::SharedArray{K,1}
     vals::SharedArray{V,1}
@@ -7,8 +7,8 @@ type SharedDict{K,V} <: Associative{K,V}
     pids::AbstractVector{Int}
 end
 
-function share{T}(a::AbstractArray{T};kwargs...)
-    sh = SharedArray(T,size(a);kwargs...)
+function share{T}(a::AbstractArray{T}; kwargs...)
+    sh = SharedArray{T}(size(a); kwargs...)
     @simd for i=1:length(a)
         sh.s[i] = a[i]
     end
